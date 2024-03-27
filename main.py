@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso
 import matplotlib.pyplot as plt
 
 
-def PCA(X, n_components=2):
+def PCA(X, n_components=2) -> np.ndarray:
 
     # first normalize the data
     X = (X - X.mean(axis=0)) / X.std(axis=0)
@@ -26,6 +26,12 @@ def PCA(X, n_components=2):
     eig_vectors = eig_vectors[:, idx]
 
     # select the top n_components eigenvectors that maximize the variance
+    eig_vectors = eig_vectors[:, :n_components]
+
+    # project the data onto the eigenvectors
+    X_pca = X.dot(eig_vectors) # linear transformation , shape (n_samples, n_components)
+
+    return X_pca
 
 
 
@@ -66,4 +72,6 @@ if __name__ == '__main__':
     X = data.drop('y', axis=1).values
     y = data['y'].values
 
-    update_plot(X,y, regularization=None, alpha=0.0)
+    X_pca = PCA(X, n_components=2)
+
+    update_plot(X_pca,y, regularization=None, alpha=0.0)
